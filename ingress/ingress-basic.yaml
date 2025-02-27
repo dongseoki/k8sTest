@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: / # / 경로로 redirect 하기
+spec:
+  rules:
+  - host: foo.bar.com # foo.bar.com/foos1 로 오는 요청을 s1 이라는 서비스의 80 포트로 보내기 
+    http:
+      paths:
+      - path: /foos1
+        pathType: Prefix
+        backend:
+          service:
+            name: s1
+            port:
+              number: 80
+      - path: /bars2
+        pathType: Prefix
+        backend:
+          service:
+            name: s2
+            port:
+              number: 80
+  - host: bar.foo.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: s2
+              port:
+                number: 80
